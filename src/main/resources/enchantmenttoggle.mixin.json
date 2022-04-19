@@ -3,6 +3,7 @@
 	"package": "io.github.haykam821.enchantmenttoggle.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"EnchantmentHelperMixin",
 		"ExperienceOrbEntityMixin"
 	],
 	"injectors": {
