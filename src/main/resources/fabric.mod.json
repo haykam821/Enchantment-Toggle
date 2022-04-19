@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "enchantmenttoggle",
+	"version": "${version}",
+	"name": "Enchantment Toggle",
+	"description": "Allows players to select active enchantments on their items.",
+	"authors": [
+		"haykam821"
+	],
+	"contact": {
+		"homepage": "https://github.com/haykam821/Enchantment-Toggle#readme",
+		"issues": "https://github.com/haykam821/Enchantment-Toggle/issues"
+	},
+	"entrypoints": {
+		"main": [
+			"io.github.haykam821.enchantmenttoggle.EnchantmentToggle"
+		],
+		"cardinal-components-entity": [
+			"io.github.haykam821.enchantmenttoggle.component.EnchantmentToggleComponentInitializer"
+		]
+	},
+	"custom": {
+		"cardinal-components": [
+			"enchantmenttoggle:enchantment_toggle"
+		]
+	},
+	"license": "MIT",
+	"depends": {
+		"fabricloader": ">=0.4.0",
+		"java": ">=17",
+		"fabric": "*",
+		"sgui": "*",
+		"server_translations_api": "*",
+		"cardinal-components-entity": "*"
+	}
+}

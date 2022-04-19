@@ -1,0 +1,6 @@
+{
+	"command.enchantmenttoggle.not_toggleable": "The %s enchantment cannot be toggled",
+	"command.enchantmenttoggle.success.active": "The %s enchantment is now active",
+	"command.enchantmenttoggle.success.inactive": "The %s enchantment is now inactive",
+	"text.enchantmenttoggle.ui.title": "Enchantment Toggle"
+}
