@@ -19,6 +19,9 @@
 			"io.github.haykam821.enchantmenttoggle.component.EnchantmentToggleComponentInitializer"
 		]
 	},
+	"mixins": [
+		"enchantmenttoggle.mixin.json"
+	],
 	"custom": {
 		"cardinal-components": [
 			"enchantmenttoggle:enchantment_toggle"

@@ -6,7 +6,8 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import io.github.haykam821.enchantmenttoggle.EnchantmentToggle;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class EnchantmentToggleComponentInitializer implements EntityComponentInitializer {
@@ -18,7 +19,12 @@ public class EnchantmentToggleComponentInitializer implements EntityComponentIni
 		registry.registerForPlayers(ENCHANTMENT_TOGGLE, EnchantmentToggleComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
 	}
 
-	public static EnchantmentToggleComponent forPlayer(ServerPlayerEntity player) {
+	public static EnchantmentToggleComponent forPlayer(PlayerEntity player) {
 		return EnchantmentToggleComponentInitializer.ENCHANTMENT_TOGGLE.get(player);
+	}
+
+	public static boolean isActive(PlayerEntity player, Enchantment enchantment) {
+		EnchantmentToggleComponent component = EnchantmentToggleComponentInitializer.forPlayer(player);
+		return component.isActive(enchantment);
 	}
 }

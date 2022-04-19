@@ -29,6 +29,11 @@ public class EnchantmentToggleComponent implements Component {
 		return !this.inactiveEnchantments.contains(entry) || !EnchantmentToggle.isToggleable(entry);
 	}
 
+	public boolean isActive(Enchantment enchantment) {
+		RegistryKey<Enchantment> key = Registry.ENCHANTMENT.getKey(enchantment).orElse(null);
+		return this.isActive(Registry.ENCHANTMENT.entryOf(key));
+	}
+
 	/**
 	 * @return whether the enchantment is active
 	 */
