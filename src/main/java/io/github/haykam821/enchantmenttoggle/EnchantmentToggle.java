@@ -2,7 +2,7 @@ package io.github.haykam821.enchantmenttoggle;
 
 import io.github.haykam821.enchantmenttoggle.command.EnchantmentToggleCommand;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -17,7 +17,7 @@ public class EnchantmentToggle implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			EnchantmentToggleCommand.register(dispatcher);
 		});
 	}

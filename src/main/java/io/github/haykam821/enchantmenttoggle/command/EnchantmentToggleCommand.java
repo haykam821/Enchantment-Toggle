@@ -16,14 +16,13 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
 
 public class EnchantmentToggleCommand {
 	public static final DynamicCommandExceptionType NOT_TOGGLEABLE_ENCHANTMENT_EXCEPTION = new DynamicCommandExceptionType(name -> {
-		return new TranslatableText("command.enchantmenttoggle.not_toggleable", name);
+		return Text.translatable("command.enchantmenttoggle.not_toggleable", name);
 	});
 
 	private EnchantmentToggleCommand() {
@@ -52,7 +51,7 @@ public class EnchantmentToggleCommand {
 		RegistryKey<Enchantment> key = Registry.ENCHANTMENT.getKey(enchantment).orElse(null);
 		RegistryEntry<Enchantment> entry = Registry.ENCHANTMENT.entryOf(key);
 
-		Text name = new TranslatableText(enchantment.getTranslationKey());
+		Text name = Text.translatable(enchantment.getTranslationKey());
 		if (!EnchantmentToggle.isToggleable(entry)) {
 			throw NOT_TOGGLEABLE_ENCHANTMENT_EXCEPTION.create(name);
 		}
@@ -61,7 +60,7 @@ public class EnchantmentToggleCommand {
 		boolean active = component.toggle(entry);
 
 		String translationKey = "command.enchantmenttoggle.success." + (active ? "active" : "inactive");
-		context.getSource().sendFeedback(new TranslatableText(translationKey, name), false);
+		context.getSource().sendFeedback(Text.translatable(translationKey, name), false);
 
 		return Command.SINGLE_SUCCESS;
 	}

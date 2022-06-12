@@ -11,7 +11,7 @@ import io.github.haykam821.enchantmenttoggle.ui.layer.EnchantmentToolbarLayer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.util.registry.RegistryEntryList.Named;
@@ -37,7 +37,7 @@ public class EnchantmentToggleUi extends LayeredGui {
 		this.component = EnchantmentToggleComponentInitializer.forPlayer(player);
 		this.enchantments = EnchantmentToggleUi.createEnchantments();
 
-		this.setTitle(new TranslatableText("text.enchantmenttoggle.ui.title"));
+		this.setTitle(Text.translatable("text.enchantmenttoggle.ui.title"));
 		this.update();
 	}
 
