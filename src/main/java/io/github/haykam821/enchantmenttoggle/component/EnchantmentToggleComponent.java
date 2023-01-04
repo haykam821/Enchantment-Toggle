@@ -11,36 +11,29 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 
 public class EnchantmentToggleComponent implements Component {
 	private static final String INACTIVE_ENCHANTMENTS_KEY = "InactiveEnchantments";
 
-	public final Set<RegistryEntry<Enchantment>> inactiveEnchantments = new HashSet<>();
+	public final Set<Enchantment> inactiveEnchantments = new HashSet<>();
 
 	public EnchantmentToggleComponent(PlayerEntity player) {
 		return;
 	}
 
-	public boolean isActive(RegistryEntry<Enchantment> entry) {
-		return !this.inactiveEnchantments.contains(entry) || !EnchantmentToggle.isToggleable(entry);
-	}
-
 	public boolean isActive(Enchantment enchantment) {
-		RegistryKey<Enchantment> key = Registry.ENCHANTMENT.getKey(enchantment).orElse(null);
-		return this.isActive(Registry.ENCHANTMENT.entryOf(key));
+		return !this.inactiveEnchantments.contains(enchantment) || !EnchantmentToggle.isToggleable(enchantment);
 	}
 
 	/**
 	 * @return whether the enchantment is active
 	 */
-	public boolean toggle(RegistryEntry<Enchantment> entry) {
-		if (EnchantmentToggle.isToggleable(entry)) {
-			if (!this.inactiveEnchantments.remove(entry)) {
-				this.inactiveEnchantments.add(entry);
+	public boolean toggle(Enchantment enchantment) {
+		if (EnchantmentToggle.isToggleable(enchantment)) {
+			if (!this.inactiveEnchantments.remove(enchantment)) {
+				this.inactiveEnchantments.add(enchantment);
 				return false;
 			}
 		}
@@ -57,19 +50,16 @@ public class EnchantmentToggleComponent implements Component {
 			Identifier id = Identifier.tryParse(list.getString(index));
 			if (id == null) continue;
 
-			RegistryKey<Enchantment> key = RegistryKey.of(Registry.ENCHANTMENT_KEY, id);
-			this.inactiveEnchantments.add(Registry.ENCHANTMENT.entryOf(key));
+			this.inactiveEnchantments.add(Registries.ENCHANTMENT.get(id));
 		}
 	}
 
 	@Override
 	public void writeToNbt(NbtCompound nbt) {
 		NbtList list = new NbtList();
-		for (RegistryEntry<Enchantment> entry : this.inactiveEnchantments) {
-			if (entry.getKey().isPresent()) {
-				Identifier id = entry.getKey().get().getValue();
-				list.add(NbtString.of(id.toString()));
-			}
+		for (Enchantment enchantment : this.inactiveEnchantments) {
+			Identifier id = Registries.ENCHANTMENT.getId(enchantment);
+			list.add(NbtString.of(id.toString()));
 		}
 
 		nbt.put(INACTIVE_ENCHANTMENTS_KEY, list);

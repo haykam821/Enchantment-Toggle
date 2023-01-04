@@ -10,7 +10,6 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.RegistryEntry;
 
 public final class EnchantmentElement {
 	private static final Item ACTIVE_ICON = Items.LIME_DYE;
@@ -23,23 +22,23 @@ public final class EnchantmentElement {
 		return;
 	}
 
-	public static GuiElement of(EnchantmentToggleUi ui, RegistryEntry<Enchantment> entry) {
-		boolean active = ui.getComponent().isActive(entry);
+	public static GuiElement of(EnchantmentToggleUi ui, Enchantment enchantment) {
+		boolean active = ui.getComponent().isActive(enchantment);
 
-		Text name = Text.translatable(entry.value().getTranslationKey()).styled(style -> {
+		Text name = Text.translatable(enchantment.getTranslationKey()).styled(style -> {
 			return style.withFormatting(active ? ACTIVE_FORMATTING : INACTIVE_FORMATTING);
 		});
 
 		return new GuiElementBuilder(active ? ACTIVE_ICON : INACTIVE_ICON)
 			.setName(name)
-			.setCallback(EnchantmentElement.createCallback(ui, entry))
+			.setCallback(EnchantmentElement.createCallback(ui, enchantment))
 			.build();
 	}
 
-	private static ClickCallback createCallback(EnchantmentToggleUi ui, RegistryEntry<Enchantment> entry) {
+	private static ClickCallback createCallback(EnchantmentToggleUi ui, Enchantment enchantment) {
 		return (index, type, action, guiInterface) -> {
 			if (action == SlotActionType.PICKUP) {
-				ui.getComponent().toggle(entry);
+				ui.getComponent().toggle(enchantment);
 				ui.update();
 
 				ElementUtil.playClickSound(ui);

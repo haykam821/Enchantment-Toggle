@@ -11,14 +11,14 @@ import io.github.haykam821.enchantmenttoggle.EnchantmentToggle;
 import io.github.haykam821.enchantmenttoggle.component.EnchantmentToggleComponent;
 import io.github.haykam821.enchantmenttoggle.component.EnchantmentToggleComponentInitializer;
 import io.github.haykam821.enchantmenttoggle.ui.EnchantmentToggleUi;
-import net.minecraft.command.argument.EnchantmentArgumentType;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.RegistryEntryArgumentType;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 
 public class EnchantmentToggleCommand {
 	public static final DynamicCommandExceptionType NOT_TOGGLEABLE_ENCHANTMENT_EXCEPTION = new DynamicCommandExceptionType(name -> {
@@ -29,10 +29,10 @@ public class EnchantmentToggleCommand {
 		return;
 	}
 
-	public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+	public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
 		LiteralArgumentBuilder<ServerCommandSource> builder = CommandManager.literal(EnchantmentToggle.MOD_ID)
 			.executes(EnchantmentToggleCommand::executeShow)
-			.then(CommandManager.argument("enchantment", EnchantmentArgumentType.enchantment())
+			.then(CommandManager.argument("enchantment", RegistryEntryArgumentType.registryEntry(registryAccess, RegistryKeys.ENCHANTMENT))
 				.executes(EnchantmentToggleCommand::executeToggle));
 
 		dispatcher.register(builder);
@@ -46,18 +46,16 @@ public class EnchantmentToggleCommand {
 	}
 
 	public static int executeToggle(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		Enchantment enchantment = EnchantmentArgumentType.getEnchantment(context, "enchantment");
-
-		RegistryKey<Enchantment> key = Registry.ENCHANTMENT.getKey(enchantment).orElse(null);
-		RegistryEntry<Enchantment> entry = Registry.ENCHANTMENT.entryOf(key);
+		RegistryEntry<Enchantment> entry = RegistryEntryArgumentType.getRegistryEntry(context, "enchantment", RegistryKeys.ENCHANTMENT);
+		Enchantment enchantment = entry.value();
 
 		Text name = Text.translatable(enchantment.getTranslationKey());
-		if (!EnchantmentToggle.isToggleable(entry)) {
+		if (!EnchantmentToggle.isToggleable(enchantment)) {
 			throw NOT_TOGGLEABLE_ENCHANTMENT_EXCEPTION.create(name);
 		}
 
 		EnchantmentToggleComponent component = EnchantmentToggleComponentInitializer.forPlayer(context.getSource().getPlayer());
-		boolean active = component.toggle(entry);
+		boolean active = component.toggle(enchantment);
 
 		String translationKey = "command.enchantmenttoggle.success." + (active ? "active" : "inactive");
 		context.getSource().sendFeedback(Text.translatable(translationKey, name), false);

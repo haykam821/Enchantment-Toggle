@@ -9,12 +9,12 @@ import io.github.haykam821.enchantmenttoggle.component.EnchantmentToggleComponen
 import io.github.haykam821.enchantmenttoggle.ui.layer.EnchantmentGridLayer;
 import io.github.haykam821.enchantmenttoggle.ui.layer.EnchantmentToolbarLayer;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.registry.entry.RegistryEntryList.Named;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntryList;
-import net.minecraft.util.registry.RegistryEntryList.Named;
 
 public class EnchantmentToggleUi extends LayeredGui {
 	private final EnchantmentGridLayer gridLayer;
@@ -88,7 +88,7 @@ public class EnchantmentToggleUi extends LayeredGui {
 	}
 
 	private static RegistryEntryList<Enchantment> createEnchantments() {
-		Optional<Named<Enchantment>> optional = Registry.ENCHANTMENT.getEntryList(EnchantmentToggle.TOGGLEABLE_ENCHANTMENTS);
+		Optional<Named<Enchantment>> optional = Registries.ENCHANTMENT.getEntryList(EnchantmentToggle.TOGGLEABLE_ENCHANTMENTS);
 		if (optional.isPresent()) {
 			return optional.get();
 		}

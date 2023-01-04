@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import io.github.haykam821.enchantmenttoggle.ui.EnchantmentToggleUi;
 import io.github.haykam821.enchantmenttoggle.ui.element.EnchantmentElement;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 
 public class EnchantmentGridLayer extends AbstractEnchantmentLayer {
 	public static final Comparator<RegistryEntry<Enchantment>> COMPARATOR = Comparator.comparing(entry -> {
@@ -30,20 +30,21 @@ public class EnchantmentGridLayer extends AbstractEnchantmentLayer {
 		this.clearSlots();
 
 		int slot = 0;
-		for (RegistryEntry<Enchantment> entry : this.getPageEntries()) {
+		for (Enchantment enchantment : this.getPageEntries()) {
 			if (slot >= this.getSize()) {
 				break;
 			}
 
-			this.setSlot(slot, EnchantmentElement.of(this.ui, entry));
+			this.setSlot(slot, EnchantmentElement.of(this.ui, enchantment));
 			slot += 1;
 		}
 	}
 
-	private Iterable<RegistryEntry<Enchantment>> getPageEntries() {
+	private Iterable<Enchantment> getPageEntries() {
 		return this.ui.getEnchantments().stream()
 			.sorted(COMPARATOR)
 			.skip(this.getSize() * this.ui.getPage())
+			.map(RegistryEntry::value)
 			.collect(Collectors.toList());
 	}
 
